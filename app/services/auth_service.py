@@ -1,5 +1,6 @@
 from app import db
 from app.models.user import User
+from flask_jwt_extended import create_access_token
 
 def register_user(data):
     username = data.get('username')
@@ -31,5 +32,6 @@ def login_user(data):
     user = User.query.filter_by(email=email).first()
     if not user or not user.check_password(password):
         return {'error': 'Invalid credentials'}, 401
+    access_token = create_access_token(identity=user.id)
 
-    return {'message': f'Welcome {user.username}!'}, 200
+    return {'message': f'Welcome {user.username}!', 'access_token': access_token }, 200
