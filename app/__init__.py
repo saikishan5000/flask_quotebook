@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from app.extensions import db, migrate, bcrypt, jwt
 from app.extensions.jwt_handlers import register_jwt_callbacks
 from app.extensions.error_handlers import register_error_handlers
+from app.extensions.seed_roles import seed_permissions
 
 load_dotenv()
 
@@ -23,6 +24,9 @@ def create_app():
 
     # Only import models after extensions and blueprints are set up to avoid circular imports
     from app.models import User, Role, Permission
+    # Seed permissions
+    with app.app_context():
+        seed_permissions()
 
     # Default route
     @app.route('/')
